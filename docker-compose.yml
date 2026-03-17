@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  redis-server:
+    image: 'redis:alpine'
+    container_name: 'redis-server'
+    volumes:
+     - 'redis-data:/data'
+
+  node-app:
+    build: .
+    container_name: 'node-app'
+    ports:
+      - "4001:8086"
+    depends_on:
+      - "redis-server"
+    restart: 'always'
+
+    volumes:
+     - '.:/app'
+     - '/app/node-modules'
+    
+volumes:
+    redis-data:

@@ -1,0 +1,11 @@
+{
+ 	"dependencies": {
+ 	 	"express": "4.22.1",
+ 	 	"redis": "4.7.0"
+ 	},
+ 	"scripts": {
+ 	 	"start": "node test.js",
+		"dev": "npx nodemon test.js",
+		"build": "mkdir -p build && cp test.js build/index.html"
+ 	}
+}
