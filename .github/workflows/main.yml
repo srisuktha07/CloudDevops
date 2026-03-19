@@ -1,33 +1,40 @@
 name: The Node & Redis Project
+
 on: 
   push:
     branches: [master]
+
 jobs:  
   build-test: 
-     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-     strategy:
-       matrix:
-           node-version: [16,18]
-     env:
-       PORT:4001
+    strategy:
+      matrix:
+        node-version: [16, 18]
+
+    env:
+      PORT: 4001
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-           node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node-version }}
+
       - name: Install Dependencies
-        uses: npm install 
-      - name : Run Tests
-        uses: echo "Running Tests"
+        run: npm install 
+
+      - name: Run Tests
+        run: echo "Running Tests"
 
       - name: Build Docker Image
-        uses: docker build -t myapp .
+        run: docker build -t myapp .
+
       - name: Running The Container
-        uses: docker run -p 4001:8080 myapp
+        run: docker run -d -p 4001:8080 myapp  # Added -d to run in background
 
       - name: Active-Container Display
-        uses: docker ps
-      
+        run: docker ps
