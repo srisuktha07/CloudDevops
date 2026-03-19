@@ -2,11 +2,19 @@ name: The Node & Redis Project
 
 on: 
   push:
-    branches: [master]
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:  
   build-test: 
     runs-on: ubuntu-latest
+    
+    # ✅ NEW: Add Docker service
+    services:
+      docker:
+        image: docker:20.10
+        options: --privileged
 
     strategy:
       matrix:
@@ -28,13 +36,13 @@ jobs:
         run: npm install 
 
       - name: Run Tests
-        run: echo "Running Tests"
+        run: npm test  # ✅ FIXED: Actually run tests
 
       - name: Build Docker Image
-        run: docker build -t myapp .
+        run: docker build -t myapp:${{ matrix.node-version }} .
 
-      - name: Running The Container
-        run: docker run -d -p 4001:8080 myapp  # Added -d to run in background
+      - name: Run Container Tests
+        run: docker run --rm myapp:${{ matrix.node-version }} npm test
 
-      - name: Active-Container Display
-        run: docker ps
+      - name: Display Running Containers
+        run: docker ps -a
